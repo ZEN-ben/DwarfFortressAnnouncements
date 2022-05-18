@@ -51,7 +51,7 @@ namespace Dwarf_Fortress_Log.ViewModel
                 {
                     lock (logItemsLock) LogItems.Add(new LogItem { Content = "Looking for 'Dwarf Fortress.exe'" });
                     await Task.Delay(1000);
-                    process = Process.GetProcessesByName("Dwarf Fortress.exe").FirstOrDefault();
+                    process = Process.GetProcessesByName("Dwarf Fortress").FirstOrDefault();
                     if (process != null)
                     {
                         break;
