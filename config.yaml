@@ -1,0 +1,338 @@
+﻿rules:
+  - regex: STARTING NEW GAME
+    foreground: white
+    background: DarkGreen
+
+  - regex: cancels
+    foreground: Gray
+
+  - regex: has been completed
+    foreground: Cyan
+
+  - regex: has been slaughtered
+    foreground: Violet
+
+  - regex: has forgotten
+    foreground: Red
+
+  - regex: reverted to a wild state!
+    foreground: Red
+
+  - regex: grown to become
+    foreground: Lime
+
+  - regex: has mandated
+    foreground: Yellow
+
+  - regex: imposed a ban
+    foreground: Yellow
+
+  - regex: It is now summer.
+    foreground: Yellow
+
+  - regex: Autumn has come.
+    foreground: Goldenrod
+    
+  - regex: Spring has arrived!
+    foreground: Lime
+
+  - regex: There is nothing to catch
+    foreground: SaddleBrown
+
+  - regex: A caravan from
+    foreground: LightSkyBlue
+
+  - regex: has been possessed!
+    foreground: Violet
+    background: DarkSlateGray
+
+  - regex: is take by a
+    foreground: LightSkyBlue
+    background: DarkSlateGray
+
+  - regex: has claimed a
+    foreground: LightSkyBlue
+    background: DarkSlateGray
+
+  - regex: has begun a mysterious
+    foreground: LightSkyBlue
+    background: DarkSlateGray
+
+  - regex: claims it as an heirloom
+    foreground: LightSkyBlue
+
+  - regex: has created a masterpiece
+    foreground: LightSkyBlue
+
+  - regex: Merchants have arrived
+    foreground: Yellow
+
+  - regex: The merchants from
+    foreground: Yellow
+
+  - regex: Some migrants have arrived
+    foreground: Yellow
+
+  - regex: has been established.
+    foreground: Yellow
+
+  - regex: You have struck
+    foreground: Yellow
+
+  - regex: a masterpiece
+    foreground: Cyan
+
+  - regex: is visiting.
+    foreground: Lime
+
+  - regex: It has started 
+    foreground: DeepSkyBlue
+
+  - regex: has given birth to
+    foreground: Lime
+
+  - regex: The Forgotten Beast
+    foreground: Yellow
+    background: Red
+
+  - regex: has come!
+    foreground: Yellow
+    background: Red
+
+  - regex: has been found dead.
+    foreground: Black
+    background: Orchid
+
+# Combat
+
+  - regex: tapping
+    foreground: LightGray
+    background: CombatRedDark
+
+  - regex: misses the
+    foreground: LightGray
+    background: CombatRedDark
+
+  - regex: glances away!
+    foreground: LightGray
+    background: CombatRedDark
+
+  - regex: jumps away!
+    foreground: LightGray
+    background: CombatRedDark
+
+  - regex: shoots out thick strands of webbing!
+    foreground: White
+    background: CombatRedDark
+
+  - regex: falls over.
+    foreground: White
+    background: CombatRedDark
+
+  - regex: is caught up in the web!
+    foreground: White
+    background: CombatRedDark
+
+  - regex: is partially free of the web.
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: is completely free of the web.
+    foreground: White
+    background: CombatRedDark
+
+  - regex: has been strained
+    foreground: White
+    background: CombatRedDark
+
+  - regex: denting the
+    foreground: White
+    background: CombatRedDark
+
+  - regex: bruised!
+    foreground: White
+    background: CombatRedDark
+    
+  - regex: bruise
+    foreground: White
+    background: CombatRedDark
+
+  - regex: bruising
+    foreground: White
+    background: CombatRedDark
+
+  - regex: looks sick!
+    foreground: Green
+    background: CombatRedDark
+
+  - regex: looks even more sick!
+    foreground: Green
+    background: CombatRedDark
+
+  - regex: retches.
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: vomits.
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: unable to break
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: drop away as
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: latches on firmly!
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: is knocked over
+    foreground: White
+    background: CombatRedDark
+
+  - regex: is ripped to shreds!
+    foreground: White
+    background: CombatRedDark
+
+  - regex: grabs
+    foreground: White
+    background: CombatRedDark
+
+  - regex: breaks the grip
+    foreground: White
+    background: CombatRedDark
+
+  - regex: locks
+    foreground: White
+    background: CombatRedDark
+
+  - regex: strangles
+    foreground: White
+    background: CombatRedDark
+
+  - regex: chokehold
+    foreground: White
+    background: CombatRedDark
+
+  - regex: releases
+    foreground: Gray
+    background: CombatRedDark
+
+  - regex: has been stunned!
+    foreground: Cyan
+    background: CombatRedDark
+
+  - regex: charges at the
+    foreground: White
+    background: CombatRedDark
+
+  - regex: loses hold of
+    foreground: White
+    background: CombatRedDark
+
+  - regex: has lodged firmly
+    foreground: White
+    background: CombatRedDark
+
+  - regex: pulls on the embedded
+    foreground: White
+    background: CombatRedDark
+
+  - regex: gains possession of the
+    foreground: White
+    background: CombatRedDark
+
+  - regex: collides with the
+    foreground: White
+    background: CombatRedDark
+
+  - regex: is no longer stunned
+    foreground: White
+    background: CombatRedDark
+
+  - regex: stands up.
+    foreground: White
+    background: CombatRedDark
+
+  - regex: has been torn!
+    foreground: White
+    background: CombatRedMedium
+
+  - regex: tearing
+    foreground: White
+    background: CombatRedMedium
+
+  - regex: The force 
+    foreground: White
+    background: CombatRedMedium
+
+  - regex: is having (more )?trouble
+    foreground: White
+    background: CombatRedMedium
+
+  - regex: chipping the
+    foreground: White
+    background: CombatRedLight
+
+  - regex: An artery has been
+    foreground: White
+    background: CombatRedLight
+
+  - regex: severed
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: cloven asunder!
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: explodes!
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: passes out
+    foreground: White
+    background: CombatRedLight
+
+  - regex: knocked unconscious!
+    foreground: White
+    background: CombatRedLight
+
+  - regex: regains consciousness
+    foreground: White
+    background: CombatRedLight
+
+  - regex: fracturing
+    foreground: White
+    background: CombatRedLight
+
+  - regex: ripped away
+    foreground: White
+    background: CombatRedLight
+
+  - regex: mostly cut away from the rest
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: artery
+    foreground: White
+    background: CombatRedLight
+
+  - regex: collapses
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: explodes
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: gore
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: has transformed into
+    foreground: Yellow
+    background: CombatRedLight
