@@ -1,4 +1,15 @@
-﻿rules:
+﻿# Read n amount of characters back from the gamelog after startup
+readback: 5000 # characters
+
+customColors:
+    - name: CombatRedDark
+      hex: "#400000"
+    - name: CombatRedMedium
+      hex: "#800000"
+    - name: CombatRedLight
+      hex: "#FF0000"
+
+rules:
   - regex: STARTING NEW GAME
     foreground: white
     background: DarkGreen

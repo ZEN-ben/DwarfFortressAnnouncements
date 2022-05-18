@@ -23,7 +23,8 @@ namespace Dwarf_Fortress_Log.ViewModel
         private object logItemsLock = new object();
         private long lastPosition = 0;
 
-        private Configuration configuration; 
+        private Configuration configuration;
+        private Dictionary<string, SolidColorBrush> customBrushes = new Dictionary<string, SolidColorBrush>();
 
         public MainViewModel()
         {
@@ -36,7 +37,23 @@ namespace Dwarf_Fortress_Log.ViewModel
 
             configuration = builder.Deserialize<Configuration>(File.ReadAllText("config.yaml"));
 
+            LoadCustomBrushes(configuration);
+
             LoadGamelogCommand.Execute(null);
+        }
+
+        private void LoadCustomBrushes(Configuration configuration)
+        {
+            foreach (CustomColor c in configuration.CustomColors)
+            {
+                try
+                {
+                    customBrushes.Add(c.Name, (SolidColorBrush)(new BrushConverter().ConvertFromString(c.Hex) ?? Brushes.Violet));
+                } catch (Exception exception)
+                {
+                    lock (logItemsLock) LogItems.Add(new LogItem { Content = $"Could not parse custom color '{c.Name} ({c.Hex})'" });
+                }
+            }
         }
 
         public IAsyncRelayCommand LoadGamelogCommand { get; }
@@ -63,7 +80,7 @@ namespace Dwarf_Fortress_Log.ViewModel
 
             using (Stream stream = File.Open($"{gameFolder}/gamelog.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                lastPosition = stream.Length - 5000 - 20000;
+                lastPosition = stream.Length - configuration.Readback;
                 lastPosition = lastPosition > 0 ? lastPosition : 0;
             }
 
@@ -109,7 +126,7 @@ namespace Dwarf_Fortress_Log.ViewModel
                 {
                     if (r.Foreground != null)
                     {
-                        foreground = (SolidColorBrush)new BrushConverter().ConvertFromString(r.Foreground);
+                        foreground = StringToBrush(r.Foreground);
                     }
                     if (r.Background != null)
                     {
@@ -133,17 +150,20 @@ namespace Dwarf_Fortress_Log.ViewModel
 
         private SolidColorBrush StringToBrush(string term)
         {
-            switch (term)
+            if (customBrushes.TryGetValue(term, out var brush))
             {
-                case "CombatRedDark":
-                    return new SolidColorBrush(Color.FromRgb(64,0,0));
-                case "CombatRedMedium":
-                    return new SolidColorBrush(Color.FromRgb(128,0,0));
-                case "CombatRedLight":
-                    return new SolidColorBrush(Color.FromRgb(255,0,0));
+                return brush;
             }
 
-            return (SolidColorBrush)(new BrushConverter().ConvertFromString(term) ?? Brushes.Violet);
+            try
+            {
+                return (SolidColorBrush)(new BrushConverter().ConvertFromString(term) ?? Brushes.Violet);
+            }
+            catch (Exception exception)
+            {
+                lock (logItemsLock) LogItems.Add(new LogItem { Content = $"Could not parse custom color '{term}'" });
+            }
+            return Brushes.Violet;
         }
     }
 }
