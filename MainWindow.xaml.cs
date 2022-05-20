@@ -1,21 +1,13 @@
 ﻿using Dwarf_Fortress_Log.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using static Dwarf_Fortress_Log.Util.Hook;
+using static Dwarf_Fortress_Log.Util.WindowsServices;
 
 namespace Dwarf_Fortress_Log
 {
@@ -24,19 +16,86 @@ namespace Dwarf_Fortress_Log
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IntPtr dfhWnd;
+        private IntPtr hWinEventHook;
+        private Process dfProcess;
+        private DpiScale dpiScale;
+        private MainViewModel mvm;
+
+        protected WinEventDelegate WinEventDelegate;
+        static GCHandle GCSafetyHandle;
+
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = App.Current.Services.GetService(typeof(MainViewModel));
 
-            ((INotifyCollectionChanged)this.listBox.Items).CollectionChanged += (object? sender, NotifyCollectionChangedEventArgs e) =>
+            WinEventDelegate = new WinEventDelegate(WinEventCallback);
+            GCSafetyHandle = GCHandle.Alloc(WinEventDelegate);
+
+            DataContext = App.Current.Services.GetService(typeof(MainViewModel));
+
+            ((INotifyCollectionChanged)listBox.Items).CollectionChanged += (object? sender, NotifyCollectionChangedEventArgs e) =>
             {
-                int i = this.listBox.Items.Count - 1;
+                int i = listBox.Items.Count - 1;
                 if (i > 0)
                 {
-                    this.listBox.ScrollIntoView(this.listBox.Items[i]);
+                    listBox.ScrollIntoView(listBox.Items[i]);
                 }
             };
+
+            mvm = (MainViewModel)DataContext;
+            mvm.PropertyChanged += MainWindow_PropertyChanged;
+
+            Width = mvm.Configuration.Width;
+            Height = mvm.Configuration.Height;
+        }
+
+        private void MainWindow_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Debug.WriteLine(e.PropertyName);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainViewModel? mvm = (MainViewModel)DataContext;
+            dpiScale = VisualTreeHelper.GetDpi(this);
+            if (mvm.Process != null)
+            {
+                dfProcess = mvm.Process;
+                dfhWnd = mvm.Process.MainWindowHandle;
+                new WindowInteropHelper(this).Owner = dfhWnd;
+
+                uint targetThreadId = GetWindowThread(dfhWnd);
+                hWinEventHook = WinEventHookOne(
+                    SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE,
+                    WinEventDelegate, (uint)dfProcess.Id, targetThreadId
+                );
+
+                RECT rect = GetWindowRectangle(dfhWnd);
+                MoveWindow(rect);
+            }
+        }
+
+        protected void WinEventCallback(
+            IntPtr hWinEventHook,
+            SWEH_Events eventType,
+            IntPtr hWnd,
+            SWEH_ObjectId idObject,
+            long idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (hWnd == dfhWnd &&
+                eventType == SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE &&
+                idObject == (SWEH_ObjectId)SWEH_CHILDID_SELF)
+            {
+                RECT rect = GetWindowRectangle(hWnd);
+                MoveWindow(rect);
+            }
+        }
+
+        private void MoveWindow(RECT rect)
+        {
+            Top = (rect.Bottom - (Height+mvm.Configuration.OffsetY) * dpiScale.DpiScaleY) / dpiScale.DpiScaleY;
+            Left = (rect.Right - (Width + mvm.Configuration.OffsetX) * dpiScale.DpiScaleX) / dpiScale.DpiScaleX;
         }
     }
 }

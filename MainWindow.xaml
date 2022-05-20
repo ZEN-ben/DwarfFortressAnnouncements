@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:Dwarf_Fortress_Log"
         mc:Ignorable="d"
         xmlns:df="clr-namespace:Dwarf_Fortress_Log.ViewModel"
-        Title="Dwarf Fortress Announcements" Height="450" Width="800" FontFamily="MS UI Gothic">
+        Title="{Binding Process.MainWindowTitle, Mode=OneWay}" Height="350" Width="432" FontFamily="MS UI Gothic" WindowStyle="None" IsHitTestVisible="False" Left="1" Top="1" Loaded="Window_Loaded" ResizeMode="NoResize" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" Opacity="{Binding Configuration.Opacity}">
     <Window.Resources>
         <DataTemplate x:Key="LogItemTemplate">
-            <TextBlock TextWrapping="Wrap" d:Text="Ber Degdeduk, Tanner has created Tinancatten, a chicken leather quiver!  He claims it as an heirloom in the name of the family ancestor Eral Visedvaults." Text="{Binding Content}" Background="{Binding ColorBackground}" Foreground="{Binding ColorForeground}" d:Foreground="White" Padding="2,2,2,0"/>
+            <TextBlock TextWrapping="Wrap" d:Text="Ber Degdeduk, Tanner has created Tinancatten, a chicken leather quiver!  He claims it as an heirloom in the name of the family ancestor Eral Visedvaults. Test 123" Text="{Binding Content}" Background="{Binding ColorBackground}" Foreground="{Binding ColorForeground}" d:Foreground="White" Padding="2,2,2,0" IsHitTestVisible="False"/>
         </DataTemplate>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="0" IsHitTestVisible="False"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -38,8 +38,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true" IsHitTestVisible="False">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" IsHitTestVisible="False"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <MultiTrigger>
@@ -77,14 +77,7 @@
     <d:Window.DataContext>
         <df:MainViewModel/>
     </d:Window.DataContext>
-    <Grid>
-        <ListBox ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}" ItemTemplate="{DynamicResource LogItemTemplate}" x:Name="listBox" ItemsSource="{Binding LogItems}" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalContentAlignment="Stretch">
-            <ListBox.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Color="#FF161414" Offset="1"/>
-                </LinearGradientBrush>
-            </ListBox.Background>
-        </ListBox>
+    <Grid IsHitTestVisible="False">
+        <ListBox ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}" ItemTemplate="{DynamicResource LogItemTemplate}" x:Name="listBox" ItemsSource="{Binding LogItems}" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" IsHitTestVisible="False" BorderBrush="{x:Null}" Foreground="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
     </Grid>
 </Window>

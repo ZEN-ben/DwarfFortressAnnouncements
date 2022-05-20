@@ -1,11 +1,10 @@
-﻿using System.Windows.Media;
-
-namespace Dwarf_Fortress_Log.Model
+﻿namespace Dwarf_Fortress_Log.Model
 {
-    internal class Rule
+    public class Rule
     {
         public string? Regex = null;
         public string? Foreground = null;
         public string? Background = null;
+        public bool Skip = false;
     }
 }

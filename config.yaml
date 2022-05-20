@@ -1,5 +1,9 @@
-﻿# Read n amount of characters back from the gamelog after startup
-readback: 5000 # characters
+﻿readback: 5000 # characters
+height: 400
+width: 432
+offsetX: 7
+offsetY: 40
+opacity: 0.75
 
 customColors:
     - name: CombatRedDark
@@ -10,8 +14,13 @@ customColors:
       hex: "#FF0000"
 
 rules:
+#   - regex: <any valid regex> # make sure to escape YAML
+#     skip: <true|false> (optional) # any messages that match this regex will not be shown
+#     foreground: <color token> (optional) # see https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.colors?view=windowsdesktop-6.0
+#     background: <color token> (optional) # defaults to transparent
+
   - regex: STARTING NEW GAME
-    foreground: white
+    foreground: White
     background: DarkGreen
 
   - regex: cancels
@@ -115,6 +124,8 @@ rules:
     background: Orchid
 
 # Combat
+  - regex: lightly tapping the target!
+    skip: true
 
   - regex: tapping
     foreground: LightGray
@@ -138,6 +149,10 @@ rules:
 
   - regex: falls over.
     foreground: White
+    background: CombatRedDark
+    
+  - regex: struggles in vain
+    foreground: Gray
     background: CombatRedDark
 
   - regex: is caught up in the web!
@@ -216,7 +231,7 @@ rules:
     foreground: White
     background: CombatRedDark
 
-  - regex: locks
+  - regex: " locks"
     foreground: White
     background: CombatRedDark
 
@@ -325,6 +340,10 @@ rules:
     background: CombatRedLight
 
   - regex: mostly cut away from the rest
+    foreground: Yellow
+    background: CombatRedLight
+    
+  - regex: ripped into loose shreds!
     foreground: Yellow
     background: CombatRedLight
 

@@ -20,10 +20,23 @@ namespace Dwarf_Fortress_Log.ViewModel
     {
         public ObservableCollection<LogItem> LogItems { get; } = new ObservableCollection<LogItem>();
 
+        private Process? _process;
+        public Process? Process
+        {
+            get => _process;
+            set => SetProperty<Process>(ref _process, value);
+        }
+
         private object logItemsLock = new object();
         private long lastPosition = 0;
 
-        private Configuration configuration;
+        private Configuration _configuration;
+        public Configuration Configuration
+        {
+            get => _configuration;
+            set => SetProperty(ref _configuration, value);
+        }
+
         private Dictionary<string, SolidColorBrush> customBrushes = new Dictionary<string, SolidColorBrush>();
 
         public MainViewModel()
@@ -35,9 +48,9 @@ namespace Dwarf_Fortress_Log.ViewModel
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            configuration = builder.Deserialize<Configuration>(File.ReadAllText("config.yaml"));
+            Configuration = builder.Deserialize<Configuration>(File.ReadAllText("config.yaml"));
 
-            LoadCustomBrushes(configuration);
+            LoadCustomBrushes(Configuration);
 
             LoadGamelogCommand.Execute(null);
         }
@@ -49,7 +62,8 @@ namespace Dwarf_Fortress_Log.ViewModel
                 try
                 {
                     customBrushes.Add(c.Name, (SolidColorBrush)(new BrushConverter().ConvertFromString(c.Hex) ?? Brushes.Violet));
-                } catch (Exception exception)
+                }
+                catch (Exception exception)
                 {
                     lock (logItemsLock) LogItems.Add(new LogItem { Content = $"Could not parse custom color '{c.Name} ({c.Hex})'" });
                 }
@@ -60,27 +74,27 @@ namespace Dwarf_Fortress_Log.ViewModel
 
         private async Task LoadGamelogAsync()
         {
-            Process? process = Process.GetProcessesByName("Dwarf Fortress").FirstOrDefault();
-            if (process == null)
+            Process = Process.GetProcessesByName("Dwarf Fortress").FirstOrDefault(p => p.MainWindowTitle == "Dwarf Fortress");
+            if (Process == null)
             {
-                lock (logItemsLock) LogItems.Add(new LogItem {  Content = "'Dwarf Fortress.exe' was not found running." });
+                lock (logItemsLock) LogItems.Add(new LogItem { Content = "'Dwarf Fortress.exe' was not found running." });
                 while (true)
                 {
                     lock (logItemsLock) LogItems.Add(new LogItem { Content = "Looking for 'Dwarf Fortress.exe'" });
                     await Task.Delay(1000);
-                    process = Process.GetProcessesByName("Dwarf Fortress").FirstOrDefault();
-                    if (process != null)
+                    Process = Process.GetProcessesByName("Dwarf Fortress").FirstOrDefault(p => p.MainWindowTitle == "Dwarf Fortress");
+                    if (Process != null)
                     {
                         break;
                     }
                 }
             }
 
-            string? gameFolder = Path.GetDirectoryName(process.MainModule.FileName);
+            string? gameFolder = Path.GetDirectoryName(Process.MainModule.FileName);
 
             using (Stream stream = File.Open($"{gameFolder}/gamelog.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                lastPosition = stream.Length - configuration.Readback;
+                lastPosition = stream.Length - Configuration.Readback;
                 lastPosition = lastPosition > 0 ? lastPosition : 0;
             }
 
@@ -97,7 +111,14 @@ namespace Dwarf_Fortress_Log.ViewModel
                     while ((line = streamReader.ReadLine()) != null)
                     {
                         // Debug.WriteLine(line);
-                        lock (logItemsLock) LogItems.Add(CreateLogItemFromLine(line));
+                        lock (logItemsLock)
+                        {
+                            LogItem item = CreateLogItemFromLine(line);
+                            if (!item.Skipped)
+                            {
+                                LogItems.Add(item);
+                            }
+                        }
                     }
                     lastPosition = stream.Position;
                     streamReader.Close();
@@ -120,10 +141,14 @@ namespace Dwarf_Fortress_Log.ViewModel
             SolidColorBrush background = Brushes.Transparent;
 
             bool found = false;
-            foreach (Rule r in configuration.Rules)
+            foreach (Rule r in Configuration.Rules)
             {
                 if (r.Regex != null && Regex.IsMatch(line, r.Regex))
                 {
+                    if (r.Skip)
+                    {
+                        return new LogItem { Skipped = true };
+                    }
                     if (r.Foreground != null)
                     {
                         foreground = StringToBrush(r.Foreground);
