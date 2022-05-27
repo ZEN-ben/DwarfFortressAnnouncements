@@ -1,9 +1,10 @@
 # Dwarf Fortress Announcements
 
 ## Instructions
-1. Download the latest release "dwarf_fortress_announcements_1_x_x.zip" file.
-2. Extract anywhere and start "Dwarf Fortress Log.exe"
-3. Optionally: to help me develop this tool further, leave feedback!
+1. Download the latest release "dwarf_fortress_announcements_1_x_x.zip" file from this page:
+   https://github.com/ZEN-ben/DwarfFortressAnnouncements/releases
+3. Extract anywhere and start "Dwarf Fortress Log.exe"
+4. Optionally: to help me develop this tool further, leave feedback!
    - [Bay12 official Dwarf Fortress forum](http://www.bay12forums.com/smf/index.php?topic=179885.0)
    - [Reddit thread](https://www.reddit.com/r/dwarffortress/comments/uui414/presenting_dfa_customizable_overlay_for/)
 
