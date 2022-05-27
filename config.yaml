@@ -40,6 +40,9 @@ rules:
 
   - regex: grown to become
     foreground: Lime
+    
+  - regex: has become 
+    foreground: Lime
 
   - regex: has mandated
     foreground: Yellow
@@ -47,15 +50,15 @@ rules:
   - regex: imposed a ban
     foreground: Yellow
 
-  - regex: It is now summer.
+  - regex: (It is now summer.|Summer has arrived)
     foreground: Yellow
 
   - regex: Autumn has come.
     foreground: Goldenrod
     
-  - regex: Spring has arrived!
+  - regex: (The wet season|Spring) has arrived
     foreground: Lime
-
+    
   - regex: There is nothing to catch
     foreground: SaddleBrown
 
@@ -83,6 +86,10 @@ rules:
 
   - regex: has created a masterpiece
     foreground: LightSkyBlue
+    
+  - regex: has stolen
+    foreground: Black
+    background: White
 
   - regex: Merchants have arrived
     foreground: Yellow
@@ -123,7 +130,23 @@ rules:
     foreground: Black
     background: Orchid
 
+  - regex: tantrum
+    foreground: Blue
+    background: Yellow
+
+  - regex: A vile force of darkness has arrived!
+    foreground: Purple
+    background: Orchid
+
+    # Skip endless repeat messages
+  - regex: "x[23456789]"
+    skip: true
+
 # Combat
+#  - regex: ".+, .+:" # Dialog
+#    foreground: White
+#    background: CombatRedDark
+    
   - regex: lightly tapping the target!
     skip: true
 
@@ -142,6 +165,14 @@ rules:
   - regex: jumps away!
     foreground: LightGray
     background: CombatRedDark
+    
+  - regex: scrambles away!
+    foreground: LightGray
+    background: CombatRedDark
+
+  - regex: deflected
+    foreground: LightGray
+    background: CombatRedDark
 
   - regex: shoots out thick strands of webbing!
     foreground: White
@@ -152,6 +183,10 @@ rules:
     background: CombatRedDark
     
   - regex: struggles in vain
+    foreground: Gray
+    background: CombatRedDark
+    
+  - regex: is blocked
     foreground: Gray
     background: CombatRedDark
 
@@ -210,9 +245,17 @@ rules:
   - regex: drop away as
     foreground: Gray
     background: CombatRedDark
+    
+  - regex: rolls away
+    foreground: Gray
+    background: CombatRedDark
 
   - regex: latches on firmly!
     foreground: Gray
+    background: CombatRedDark
+    
+  - regex: slams into
+    foreground: White
     background: CombatRedDark
 
   - regex: is knocked over
@@ -232,6 +275,10 @@ rules:
     background: CombatRedDark
 
   - regex: " locks"
+    foreground: White
+    background: CombatRedDark
+    
+  - regex: takes the # ... down
     foreground: White
     background: CombatRedDark
 
@@ -290,8 +337,16 @@ rules:
   - regex: tearing
     foreground: White
     background: CombatRedMedium
-
+    
+  - regex: throws the 
+    foreground: White
+    background: CombatRedMedium
+    
   - regex: The force 
+    foreground: White
+    background: CombatRedMedium
+    
+  - regex: enraged 
     foreground: White
     background: CombatRedMedium
 
@@ -330,8 +385,16 @@ rules:
   - regex: regains consciousness
     foreground: White
     background: CombatRedLight
+    
+  - regex: gives in to pain
+    foreground: White
+    background: CombatRedLight
 
   - regex: fracturing
+    foreground: White
+    background: CombatRedLight
+
+  - regex: torn apart
     foreground: White
     background: CombatRedLight
 
@@ -344,6 +407,18 @@ rules:
     background: CombatRedLight
     
   - regex: ripped into loose shreds!
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: shattering
+    foreground: Yellow
+    background: CombatRedLight
+
+  - regex: part is crushed!
+    foreground: Yellow
+    background: CombatRedLight
+    
+  - regex: unrecognizable mass!
     foreground: Yellow
     background: CombatRedLight
 
@@ -366,3 +441,16 @@ rules:
   - regex: has transformed into
     foreground: Yellow
     background: CombatRedLight
+    
+  - regex: has bled to death.
+    foreground: Yellow
+    background: CombatRedLight
+    
+  - regex: gestures!
+    foreground: Yellow
+    background: Purple
+    
+  - regex: begins to move!
+    foreground: Yellow
+    background: Purple
+    

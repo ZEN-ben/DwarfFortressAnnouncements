@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Dwarf_Fortress_Log"
         mc:Ignorable="d"
         xmlns:df="clr-namespace:Dwarf_Fortress_Log.ViewModel"
-        Title="{Binding Process.MainWindowTitle, Mode=OneWay}" Height="350" Width="432" FontFamily="MS UI Gothic" WindowStyle="None" IsHitTestVisible="False" Left="1" Top="1" Loaded="Window_Loaded" ResizeMode="NoResize" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" Opacity="{Binding Configuration.Opacity}">
+        Title="{Binding Process.MainWindowTitle, Mode=OneWay}" Height="350" Width="432" FontFamily="MS UI Gothic" WindowStyle="None" IsHitTestVisible="False" Left="1" Top="1" Loaded="Window_Loaded" ResizeMode="NoResize" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" Opacity="{Binding Configuration.Opacity}" KeyDown="Window_KeyDown">
     <Window.Resources>
         <DataTemplate x:Key="LogItemTemplate">
             <TextBlock TextWrapping="Wrap" d:Text="Ber Degdeduk, Tanner has created Tinancatten, a chicken leather quiver!  He claims it as an heirloom in the name of the family ancestor Eral Visedvaults. Test 123" Text="{Binding Content}" Background="{Binding ColorBackground}" Foreground="{Binding ColorForeground}" d:Foreground="White" Padding="2,2,2,0" IsHitTestVisible="False"/>
