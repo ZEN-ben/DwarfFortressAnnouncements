@@ -110,6 +110,17 @@ rules:
 
   - regex: has given birth to
     foreground: Lime
+    
+  - regex: beserk
+    foreground: White
+    background: Red
+
+  - regex: tantrum
+    foreground: Black
+    background: Yellow
+
+  - regex: You have struck
+    foreground: Yellow
 
   - regex: The Forgotten Beast
     foreground: Yellow

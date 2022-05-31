@@ -6,6 +6,7 @@
     <RootNamespace>Dwarf_Fortress_Log</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>dwarf_fortress.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
     <Content Include="config.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="dwarf_fortress.ico" />
   </ItemGroup>
 
 </Project>

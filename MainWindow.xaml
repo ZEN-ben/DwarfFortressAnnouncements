@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Dwarf_Fortress_Log"
         mc:Ignorable="d"
         xmlns:df="clr-namespace:Dwarf_Fortress_Log.ViewModel"
-        Title="{Binding Process.MainWindowTitle, Mode=OneWay}" Height="350" Width="432" FontFamily="MS UI Gothic" WindowStyle="None" IsHitTestVisible="False" Left="1" Top="1" Loaded="Window_Loaded" ResizeMode="NoResize" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" Opacity="{Binding Configuration.Opacity}">
+        Title="{Binding Process.MainWindowTitle, Mode=OneWay}" Height="350" Width="432" FontFamily="MS UI Gothic" WindowStyle="None" IsHitTestVisible="False" Left="1" Top="1" Loaded="Window_Loaded" ResizeMode="NoResize" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" Opacity="{Binding Configuration.Opacity}" Closing="Window_Closing">
     <Window.Resources>
         <DataTemplate x:Key="LogItemTemplate">
-            <TextBlock TextWrapping="Wrap" d:Text="Ber Degdeduk, Tanner has created Tinancatten, a chicken leather quiver!  He claims it as an heirloom in the name of the family ancestor Eral Visedvaults. Test 123" Text="{Binding Content}" Background="{Binding ColorBackground}" Foreground="{Binding ColorForeground}" d:Foreground="White" Padding="2,2,2,0" IsHitTestVisible="False"/>
+            <TextBlock TextWrapping="Wrap" d:Text="Ber Degdeduk, Tanner has created Tinancatten Test 123" Text="{Binding Content}" Background="{Binding ColorBackground}" Foreground="{Binding ColorForeground}" d:Foreground="White" Padding="2,2,2,0" IsHitTestVisible="False"/>
         </DataTemplate>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -73,11 +73,27 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate x:Key="ItemsControlItemTemplate1">
+            <Label Background="{Binding ColorBackground}" Padding="2,2,2,2" Foreground="{Binding ColorForeground}" Content="{Binding Item}" Margin="2,0,2,0"/>
+        </DataTemplate>
+        <DataTemplate x:Key="ItemsControlItemTemplateBattle">
+            <Label Background="{Binding ColorBackground}" Padding="2,2,2,2" Foreground="{Binding ColorForeground}" Content="{Binding}" Margin="2,0,2,0"/>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="ItemsControlItemsPanel">
+            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"/>
+        </ItemsPanelTemplate>
     </Window.Resources>
     <d:Window.DataContext>
         <df:MainViewModel/>
     </d:Window.DataContext>
     <Grid IsHitTestVisible="False">
-        <ListBox ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}" ItemTemplate="{DynamicResource LogItemTemplate}" x:Name="listBox" ItemsSource="{Binding LogItems}" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" IsHitTestVisible="False" BorderBrush="{x:Null}" Foreground="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ItemsControl ItemsPanel="{DynamicResource ItemsControlItemsPanel}" ItemTemplate="{DynamicResource ItemsControlItemTemplateBattle}" HorizontalAlignment="Right" ItemsSource="{Binding BattleItems, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Right"></ItemsControl>
+        <ItemsControl ItemsPanel="{DynamicResource ItemsControlItemsPanel}" ItemTemplate="{DynamicResource ItemsControlItemTemplate1}" HorizontalAlignment="Right" ItemsSource="{Binding MissingItems, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Right" Grid.Row="1"></ItemsControl>
+        <ListBox ItemContainerStyle="{DynamicResource ListBoxItemContainerStyle1}" ItemTemplate="{DynamicResource LogItemTemplate}" x:Name="listBox" ItemsSource="{Binding LogItems}" d:ItemsSource="{d:SampleData ItemCount=50}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" IsHitTestVisible="False" BorderBrush="{x:Null}" Foreground="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.Row="2"/>
     </Grid>
 </Window>

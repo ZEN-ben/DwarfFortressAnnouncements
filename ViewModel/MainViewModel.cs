@@ -19,6 +19,8 @@ namespace Dwarf_Fortress_Log.ViewModel
     public class MainViewModel : ObservableRecipient
     {
         public ObservableCollection<LogItem> LogItems { get; } = new ObservableCollection<LogItem>();
+        public ObservableCollection<MissingItem> MissingItems { get; } = new ObservableCollection<MissingItem>();
+        public ObservableCollection<BattleItem> BattleItems { get; } = new ObservableCollection<BattleItem>();
 
         private Process? _process;
         public Process? Process
@@ -28,6 +30,8 @@ namespace Dwarf_Fortress_Log.ViewModel
         }
 
         private object logItemsLock = new object();
+        private object missingItemsLock = new object();
+        private object battleItemsLock = new object();
         private long lastPosition = 0;
 
         private Configuration _configuration;
@@ -43,6 +47,8 @@ namespace Dwarf_Fortress_Log.ViewModel
         {
             LoadGamelogCommand = new AsyncRelayCommand(LoadGamelogAsync);
             BindingOperations.EnableCollectionSynchronization(LogItems, logItemsLock);
+            BindingOperations.EnableCollectionSynchronization(MissingItems, missingItemsLock);
+            BindingOperations.EnableCollectionSynchronization(BattleItems, battleItemsLock);
 
             IDeserializer builder = new DeserializerBuilder()
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
@@ -111,6 +117,18 @@ namespace Dwarf_Fortress_Log.ViewModel
                     while ((line = streamReader.ReadLine()) != null)
                     {
                         // Debug.WriteLine(line);
+                        if (Regex.IsMatch(line, " cancels .+: Needs "))
+                        {
+                            AddMissingItem(line);
+
+                            continue;
+                        }
+
+                        if (Regex.IsMatch(line, "The .+ .+ the .+!"))
+                        {
+                            AddBattleItem(line);
+                        }
+
                         lock (logItemsLock)
                         {
                             LogItem item = CreateLogItemFromLine(line);
@@ -132,6 +150,102 @@ namespace Dwarf_Fortress_Log.ViewModel
                     Debug.WriteLine(ex.ToString());
                     break;
                 };
+            }
+        }
+
+        private void AddMissingItem(string? line)
+        {
+            Match match = Regex.Match(line, " cancels .+: Needs (.+)\\.");
+            string itemName = match.Groups[1].Value;
+            itemName = Regex.Replace(itemName, "unrotten ", "");
+            itemName = Regex.Replace(itemName, "unused ", "");
+            itemName = Regex.Replace(itemName, "collected ", "");
+            itemName = Regex.Replace(itemName, "empty ", "");
+            itemName = Regex.Replace(itemName, "MAT-producing ", " ");
+            itemName = Regex.Replace(itemName, " item", "");
+            itemName = Regex.Replace(itemName, "-containing", "");
+
+            MissingItem? foundItem = MissingItems.FirstOrDefault((i) => i.Item == itemName);
+            if (foundItem == null)
+            {
+                lock (missingItemsLock)
+                {
+                    SolidColorBrush brush = GetRandomColor();
+
+                    MissingItem item = new MissingItem()
+                    {
+                        Item = itemName,
+                        ColorForeground = brush
+                    };
+                    MissingItems.Add(item);
+                    if (MissingItems.Count > 6)
+                    {
+                        MissingItems.RemoveAt(0);
+                    }
+                }
+            } // else highlight
+        }
+
+        private static SolidColorBrush GetRandomColor()
+        {
+            Random random = new Random();
+            float brightness = 0f;
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            while (brightness < 0.75f)
+            {
+                r = random.Next(255);
+                g = random.Next(255);
+                b = random.Next(255);
+
+                brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            }
+
+            return new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
+        }
+
+        private void AddBattleItem(string? line)
+        {
+            Match match = Regex.Match(line, "The (.+?)[ '](.+?) the (.+?)[ '].+?!");
+            if (match.Success && match.Groups[1].Value != "force")
+            {
+                lock (battleItemsLock)
+                {
+                    SolidColorBrush brush = GetRandomColor();
+                    BattleItem battleItem = new BattleItem()
+                    {
+                        UnitA = match.Groups[1].Value,
+                        UnitB = match.Groups[3].Value,
+                        ColorForeground = brush
+                    };
+
+                    List<BattleItem> remove = new List<BattleItem>();
+                    foreach (BattleItem bi in BattleItems)
+                    {
+                        if (bi.UnitA == match.Groups[1].Value && bi.UnitB == match.Groups[3].Value)
+                        {
+                            remove.Add(bi);
+                            battleItem.ColorForeground = bi.ColorForeground;
+                        }
+                        if (bi.UnitA == match.Groups[3].Value && bi.UnitB == match.Groups[1].Value)
+                        {
+                            remove.Add(bi);
+                            battleItem.ColorForeground = bi.ColorForeground;
+                        }
+                    }
+                    foreach (BattleItem bi in remove)
+                    {
+                        BattleItems.Remove(bi);
+                    }
+
+                    BattleItems.Add(battleItem);
+                    if (BattleItems.Count > 6)
+                    {
+                        BattleItems.RemoveAt(0);
+                    }
+                }
             }
         }
 
