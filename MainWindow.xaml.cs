@@ -98,6 +98,17 @@ namespace Dwarf_Fortress_Log
             Left = (rect.Right - (Width + mvm.Configuration.OffsetX) * dpiScale.DpiScaleX) / dpiScale.DpiScaleX;
         }
 
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.R:
+                    mvm.LoadConfigCommand.Execute(null);
+                    mvm.LoadGamelogCommand.Execute(null);
+                    break;
+            }
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             GCSafetyHandle.Free();

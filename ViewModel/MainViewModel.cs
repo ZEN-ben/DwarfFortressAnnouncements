@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using YamlDotNet.Serialization;
@@ -18,6 +19,8 @@ namespace Dwarf_Fortress_Log.ViewModel
 {
     public class MainViewModel : ObservableRecipient
     {
+        public IAsyncRelayCommand LoadGamelogCommand { get; }
+        public IAsyncRelayCommand LoadConfigCommand { get; }
         public ObservableCollection<LogItem> LogItems { get; } = new ObservableCollection<LogItem>();
         public ObservableCollection<MissingItem> MissingItems { get; } = new ObservableCollection<MissingItem>();
         public ObservableCollection<BattleItem> BattleItems { get; } = new ObservableCollection<BattleItem>();
@@ -45,20 +48,35 @@ namespace Dwarf_Fortress_Log.ViewModel
 
         public MainViewModel()
         {
-            LoadGamelogCommand = new AsyncRelayCommand(LoadGamelogAsync);
-            BindingOperations.EnableCollectionSynchronization(LogItems, logItemsLock);
-            BindingOperations.EnableCollectionSynchronization(MissingItems, missingItemsLock);
-            BindingOperations.EnableCollectionSynchronization(BattleItems, battleItemsLock);
+            try
+            {
+                LoadGamelogCommand = new AsyncRelayCommand(LoadGamelogAsync);
+                LoadConfigCommand = new AsyncRelayCommand(LoadConfigAsync);
+                BindingOperations.EnableCollectionSynchronization(LogItems, logItemsLock);
+                BindingOperations.EnableCollectionSynchronization(MissingItems, missingItemsLock);
+                BindingOperations.EnableCollectionSynchronization(BattleItems, battleItemsLock);
 
+                LoadConfigCommand.Execute(null);
+                LoadCustomBrushes(Configuration);
+
+                LoadGamelogCommand.Execute(null);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private Task LoadConfigAsync()
+        {
             IDeserializer builder = new DeserializerBuilder()
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
             Configuration = builder.Deserialize<Configuration>(File.ReadAllText("config.yaml"));
 
-            LoadCustomBrushes(Configuration);
 
-            LoadGamelogCommand.Execute(null);
+            return Task.CompletedTask;
         }
 
         private void LoadCustomBrushes(Configuration configuration)
@@ -75,8 +93,6 @@ namespace Dwarf_Fortress_Log.ViewModel
                 }
             }
         }
-
-        public IAsyncRelayCommand LoadGamelogCommand { get; }
 
         private async Task LoadGamelogAsync()
         {
