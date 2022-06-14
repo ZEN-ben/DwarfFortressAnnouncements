@@ -140,6 +140,14 @@ rules:
   - regex: has been found dead.
     foreground: Black
     background: Orchid
+    
+  - regex: is haunting
+    foreground: Black
+    background: Orchid
+    
+  - regex: "[Gg]host"
+    foreground: Black
+    background: Orchid
 
   - regex: tantrum
     foreground: Blue
@@ -148,6 +156,10 @@ rules:
   - regex: A vile force of darkness has arrived!
     foreground: Purple
     background: Orchid
+    
+  - regex: Interrupted by a
+    foreground: Black
+    background: LightGray
 
     # Skip endless repeat messages
   - regex: "x[23456789]"
@@ -166,22 +178,20 @@ rules:
     background: CombatRedDark
 
   - regex: misses the
-    foreground: LightGray
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: LightGray
+    #background: CombatRedDark
 
   - regex: glances away!
     foreground: LightGray
     background: CombatRedDark
 
   - regex: jumps away!
-    foreground: LightGray
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: LightGray
+    #background: CombatRedDark
     
   - regex: scrambles away!
-    foreground: LightGray
-    background: CombatRedDark
-
-  - regex: deflected
     foreground: LightGray
     background: CombatRedDark
 
@@ -198,8 +208,19 @@ rules:
     background: CombatRedDark
     
   - regex: is blocked
-    foreground: Gray
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: Gray
+    #background: CombatRedDark
+    
+  - regex: parried
+    skip: true # sparring spam
+    #foreground: Gray
+    #background: CombatRedDark
+    
+  - regex: deflected
+    skip: true # sparring spam
+    #foreground: Gray
+    #background: CombatRedDark
 
   - regex: is caught up in the web!
     foreground: White
@@ -258,8 +279,9 @@ rules:
     background: CombatRedDark
     
   - regex: rolls away
-    foreground: Gray
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: Gray
+    #background: CombatRedDark
 
   - regex: latches on firmly!
     foreground: Gray
@@ -268,10 +290,16 @@ rules:
   - regex: slams into
     foreground: White
     background: CombatRedDark
+    
+  - regex: looks surprised
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: is knocked over
-    foreground: White
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: is ripped to shreds!
     foreground: White
@@ -310,8 +338,9 @@ rules:
     background: CombatRedDark
 
   - regex: charges at the
-    foreground: White
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: loses hold of
     foreground: White
@@ -330,16 +359,19 @@ rules:
     background: CombatRedDark
 
   - regex: collides with the
-    foreground: White
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: is no longer stunned
-    foreground: White
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: stands up.
-    foreground: White
-    background: CombatRedDark
+    skip: true # sparring spam
+    #foreground: White
+    #background: CombatRedDark
 
   - regex: has been torn!
     foreground: White

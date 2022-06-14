@@ -199,7 +199,11 @@ namespace Dwarf_Fortress_Log.ViewModel
                         MissingItems.RemoveAt(0);
                     }
                 }
-            } // else highlight
+            } else
+            {
+                MissingItems.Remove(foundItem);
+                MissingItems.Add(foundItem);
+            }
         }
 
         private static SolidColorBrush GetRandomColor()
@@ -210,13 +214,15 @@ namespace Dwarf_Fortress_Log.ViewModel
             int g = 0;
             int b = 0;
 
-            while (brightness < 0.75f)
+            while (brightness < 100f)
             {
                 r = random.Next(255);
                 g = random.Next(255);
                 b = random.Next(255);
 
                 brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+                //Debug.WriteLine(brightness);
             }
 
             return new SolidColorBrush(Color.FromRgb((byte)r, (byte)g, (byte)b));
@@ -224,28 +230,32 @@ namespace Dwarf_Fortress_Log.ViewModel
 
         private void AddBattleItem(string? line)
         {
-            Match match = Regex.Match(line, "The (.+?)[ '](.+?) the (.+?)[ '].+?!");
+            Match match = Regex.Match(line, "The (?:giant|cave|flying|stray|spinning)?(?: war|cave)? ?(.+?)[ '](?:.+?) the (?:giant|cave|flying|stray|spinning)?(?: war|cave)? ?(.+?)[ '].+?!");
             if (match.Success && match.Groups[1].Value != "force")
             {
                 lock (battleItemsLock)
                 {
                     SolidColorBrush brush = GetRandomColor();
+                    
+                    string unitA = Regex.Replace(match.Groups[1].Value, "dwarf", "drf");
+                    string unitB = Regex.Replace(match.Groups[2].Value, "dwarf", "drf");
+
                     BattleItem battleItem = new BattleItem()
                     {
-                        UnitA = match.Groups[1].Value,
-                        UnitB = match.Groups[3].Value,
+                        UnitA = unitA,
+                        UnitB = unitB,
                         ColorForeground = brush
                     };
 
                     List<BattleItem> remove = new List<BattleItem>();
                     foreach (BattleItem bi in BattleItems)
                     {
-                        if (bi.UnitA == match.Groups[1].Value && bi.UnitB == match.Groups[3].Value)
+                        if (bi.UnitA == match.Groups[1].Value && bi.UnitB == match.Groups[2].Value)
                         {
                             remove.Add(bi);
                             battleItem.ColorForeground = bi.ColorForeground;
                         }
-                        if (bi.UnitA == match.Groups[3].Value && bi.UnitB == match.Groups[1].Value)
+                        if (bi.UnitA == match.Groups[2].Value && bi.UnitB == match.Groups[1].Value)
                         {
                             remove.Add(bi);
                             battleItem.ColorForeground = bi.ColorForeground;

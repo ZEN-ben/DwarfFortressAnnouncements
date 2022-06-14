@@ -21,6 +21,7 @@ namespace Dwarf_Fortress_Log
         private Process dfProcess;
         private DpiScale dpiScale;
         private MainViewModel mvm;
+        private bool attached = false;
 
         protected WinEventDelegate WinEventDelegate;
         static GCHandle GCSafetyHandle;
@@ -44,15 +45,36 @@ namespace Dwarf_Fortress_Log
             };
 
             mvm = (MainViewModel)DataContext;
-            mvm.PropertyChanged += MainWindow_PropertyChanged;
+            mvm.PropertyChanged += Mvm_PropertyChanged;
+            
 
             Width = mvm.Configuration.Width;
             Height = mvm.Configuration.Height;
         }
 
-        private void MainWindow_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Mvm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Debug.WriteLine(e.PropertyName);
+            if (attached == false && e.PropertyName == "Process" && mvm.Process != null)
+            {
+                AttachWindow();
+            }
+        }
+
+        private void AttachWindow()
+        {
+            attached = true;
+            dfProcess = mvm.Process;
+            dfhWnd = mvm.Process.MainWindowHandle;
+            new WindowInteropHelper(this).Owner = dfhWnd;
+
+            uint targetThreadId = GetWindowThread(dfhWnd);
+            hWinEventHook = WinEventHookOne(
+                SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE,
+                WinEventDelegate, (uint)dfProcess.Id, targetThreadId
+            );
+
+            RECT rect = GetWindowRectangle(dfhWnd);
+            MoveWindow(rect);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -61,18 +83,7 @@ namespace Dwarf_Fortress_Log
             dpiScale = VisualTreeHelper.GetDpi(this);
             if (mvm.Process != null)
             {
-                dfProcess = mvm.Process;
-                dfhWnd = mvm.Process.MainWindowHandle;
-                new WindowInteropHelper(this).Owner = dfhWnd;
-
-                uint targetThreadId = GetWindowThread(dfhWnd);
-                hWinEventHook = WinEventHookOne(
-                    SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE,
-                    WinEventDelegate, (uint)dfProcess.Id, targetThreadId
-                );
-
-                RECT rect = GetWindowRectangle(dfhWnd);
-                MoveWindow(rect);
+                AttachWindow();
             }
         }
 
